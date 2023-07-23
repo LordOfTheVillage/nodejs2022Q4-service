@@ -14,7 +14,11 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   findAllUsers() {
-    return this.userRepository.findAllUsers();
+    const users = this.userRepository.findAllUsers();
+    return users.map((user) => {
+      const { password, ...rest } = user;
+      return rest;
+    });
   }
 
   findUserById(id: string) {
@@ -23,14 +27,16 @@ export class UserService {
     const user = this.userRepository.findUserById(id);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
-    return user;
+    const { password, ...rest } = user;
+    return rest;
   }
 
   createUser(userData: CreateUserDto) {
     if (!userData.login || !userData.password)
       throw new BadRequestException('Missing required fields');
 
-    return this.userRepository.createUser(userData);
+    const { password, ...rest } = this.userRepository.createUser(userData);
+    return rest;
   }
 
   updateUserPassword(
@@ -38,6 +44,9 @@ export class UserService {
     { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
+    console.log('PASSWORDS', oldPassword, newPassword);
+    if (!oldPassword || !newPassword)
+      throw new BadRequestException('Missing required fields');
 
     const user = this.userRepository.findUserById(id);
     if (!user) throw new NotFoundException('User not found');
@@ -45,7 +54,11 @@ export class UserService {
     if (user.password !== oldPassword)
       throw new ForbiddenException('Old password is wrong');
 
-    return this.userRepository.updateUserPassword(id, newPassword);
+    const { password, ...rest } = this.userRepository.updateUserPassword(
+      id,
+      newPassword,
+    );
+    return rest;
   }
 
   deleteUser(id: string) {
@@ -54,10 +67,6 @@ export class UserService {
     }
 
     const result = this.userRepository.deleteUser(id);
-    if (!result) {
-      throw new NotFoundException('User not found');
-    }
-
-    return this.userRepository.deleteUser(id);
+    if (!result) throw new NotFoundException('User not found');
   }
 }
