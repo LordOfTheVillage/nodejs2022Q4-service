@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
 
-interface Artist {
+export interface Artist {
   id: string;
   name: string;
   grammy: boolean;

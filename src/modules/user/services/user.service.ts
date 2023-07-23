@@ -11,7 +11,7 @@ import { UpdatePasswordDto } from '../dto/update-password.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   findAllUsers() {
     return this.userRepository.findAllUsers();
