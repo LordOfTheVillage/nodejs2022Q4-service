@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { CreateUserDto } from "../dto/create-user.dto";
-import { Injectable } from "@nestjs/common";
+import { CreateUserDto } from '../dto/create-user.dto';
+import { Injectable } from '@nestjs/common';
 
 export interface User {
   id: string;
@@ -17,11 +17,11 @@ const users: User[] = [];
 export class UserRepository {
   private users: User[] = users;
 
-  getAllUsers(): User[] {
+  findAllUsers(): User[] {
     return this.users;
   }
 
-  getUserById(id: string): User {
+  findUserById(id: string): User {
     return this.users.find((user) => user.id === id);
   }
 
