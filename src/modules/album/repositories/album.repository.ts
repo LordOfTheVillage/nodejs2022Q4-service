@@ -43,6 +43,7 @@ export class AlbumRepository {
     if (album) {
       album.name = albumData.name;
       album.year = albumData.year;
+      album.artistId = albumData.artistId;
     }
     return album;
   }

@@ -5,6 +5,6 @@ export class CreateAlbumDto {
   name;
   @IsNumber()
   year;
-  @IsString()
+
   artistId;
 }

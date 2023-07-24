@@ -5,4 +5,5 @@ export class UpdateAlbumDto {
   name;
   @IsNumber()
   year;
+  artistId;
 }
