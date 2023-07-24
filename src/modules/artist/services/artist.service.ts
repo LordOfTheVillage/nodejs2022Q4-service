@@ -17,10 +17,8 @@ export class ArtistService {
   }
 
   findArtistById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid artist id ${id}`);
-
-    const artist = this.artistRepository.findArtistById(id);
-    if (!artist) throw new NotFoundException(`Artist with id ${id} not found`);
+    this.checkId(id);
+    const artist = this.checkArtistExists(id);
 
     return artist;
   }
@@ -30,18 +28,26 @@ export class ArtistService {
   }
 
   updateArtistInfo(id: string, artistData: UpdateArtistDto) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid artist id ${id}`);
-
-    const artist = this.artistRepository.findArtistById(id);
-    if (!artist) throw new NotFoundException('Artist not found');
+    this.checkId(id);
+    this.checkArtistExists(id);
 
     return this.artistRepository.updateArtistInfo(id, artistData);
   }
 
   deleteArtist(id: string) {
-    if (!isUUID(id)) throw new BadRequestException('Invalid artist ID');
+    this.checkId(id);
+    this.checkArtistExists(id);
 
-    const result = this.artistRepository.deleteArtist(id);
-    if (!result) throw new NotFoundException('Artist not found');
+    return this.artistRepository.deleteArtist(id);
+  }
+
+  checkArtistExists(id: string) {
+    const artist = this.artistRepository.findArtistById(id);
+    if (!artist) throw new NotFoundException('Artist not found');
+    return artist;
+  }
+
+  checkId(id: string) {
+    if (!isUUID(id)) throw new BadRequestException(`Invalid artist id ${id}`);
   }
 }

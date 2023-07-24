@@ -22,10 +22,8 @@ export class UserService {
   }
 
   findUserById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
-
-    const user = this.userRepository.findUserById(id);
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    this.checkId(id);
+    const user = this.checkUserExists(id);
 
     const { password, ...rest } = user;
     return rest;
@@ -40,10 +38,8 @@ export class UserService {
     id: string,
     { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
-
-    const user = this.userRepository.findUserById(id);
-    if (!user) throw new NotFoundException('User not found');
+    this.checkId(id);
+    const user = this.checkUserExists(id);
 
     if (user.password !== oldPassword)
       throw new ForbiddenException('Old password is wrong');
@@ -56,11 +52,19 @@ export class UserService {
   }
 
   deleteUser(id: string) {
-    if (!isUUID(id)) {
-      throw new BadRequestException('Invalid user ID');
-    }
+    this.checkId(id);
+    this.checkUserExists(id);
 
-    const result = this.userRepository.deleteUser(id);
-    if (!result) throw new NotFoundException('User not found');
+    return this.userRepository.deleteUser(id);
+  }
+
+  checkUserExists(id: string) {
+    const user = this.userRepository.findUserById(id);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  checkId(id: string) {
+    if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
   }
 }

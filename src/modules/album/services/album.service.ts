@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AlbumRepository } from '../repositories/album.repository';
+import { Album, AlbumRepository } from '../repositories/album.repository';
 import { isUUID } from '@nestjs/common/utils/is-uuid';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
@@ -17,10 +17,8 @@ export class AlbumService {
   }
 
   findAlbumById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid id ${id}`);
-
-    const album = this.albumRepository.findAlbumById(id);
-    if (!album) throw new NotFoundException(`Album ${id} not found`);
+    this.checkId(id);
+    const album = this.checkAlbumExisting(id);
 
     return album;
   }
@@ -30,20 +28,26 @@ export class AlbumService {
   }
 
   updateAlbum(id: string, dto: UpdateAlbumDto) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid id ${id}`);
-
-    const album = this.albumRepository.findAlbumById(id);
-    if (!album) throw new NotFoundException(`Album ${id} not found`);
+    this.checkId(id);
+    this.checkAlbumExisting(id);
 
     return this.albumRepository.updateAlbumInfo(id, dto);
   }
 
   deleteAlbum(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`Invalid id ${id}`);
-
-    const album = this.albumRepository.findAlbumById(id);
-    if (!album) throw new NotFoundException(`Album ${id} not found`);
+    this.checkId(id);
+    this.checkAlbumExisting(id);
 
     return this.albumRepository.deleteAlbum(id);
+  }
+
+  checkAlbumExisting(id: string) {
+    const album = this.albumRepository.findAlbumById(id);
+    if (!album) throw new NotFoundException(`Album ${id} not found`);
+    return album;
+  }
+
+  checkId(id: string) {
+    if (!isUUID(id)) throw new BadRequestException(`Invalid id ${id}`);
   }
 }
