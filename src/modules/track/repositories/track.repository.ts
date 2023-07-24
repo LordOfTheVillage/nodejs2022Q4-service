@@ -39,7 +39,7 @@ export class TrackRepository {
     return newTrack;
   }
 
-  updateTrackInfo(id: string, trackData: UpdateTrackDto): Track {
+  updateTrack(id: string, trackData: UpdateTrackDto): Track {
     const track = this.tracks.find((track) => track.id === id);
     if (track) {
       track.name = trackData.name;

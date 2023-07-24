@@ -41,13 +41,13 @@ export class ArtistService {
     return this.artistRepository.deleteArtist(id);
   }
 
-  checkArtistExists(id: string) {
+  private checkArtistExists(id: string) {
     const artist = this.artistRepository.findArtistById(id);
     if (!artist) throw new NotFoundException('Artist not found');
     return artist;
   }
 
-  checkId(id: string) {
+  private checkId(id: string) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid artist id ${id}`);
   }
 }

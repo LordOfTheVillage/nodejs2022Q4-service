@@ -41,13 +41,13 @@ export class AlbumService {
     return this.albumRepository.deleteAlbum(id);
   }
 
-  checkAlbumExisting(id: string) {
+  private checkAlbumExisting(id: string) {
     const album = this.albumRepository.findAlbumById(id);
     if (!album) throw new NotFoundException(`Album ${id} not found`);
     return album;
   }
 
-  checkId(id: string) {
+  private checkId(id: string) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid id ${id}`);
   }
 }

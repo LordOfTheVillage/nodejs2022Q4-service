@@ -17,28 +17,28 @@ import { UpdateAlbumDto } from '../dto/update-album.dto';
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
-  @Get('')
+  @Get()
   findAll() {
     return this.albumService.findAllAlbums();
   }
 
-  @Get('/:id')
+  @Get(':id')
   findById(@Param('id') id: string) {
     return this.albumService.findAlbumById(id);
   }
 
-  @Post('')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() body: CreateAlbumDto) {
     return this.albumService.createAlbum(body);
   }
 
-  @Put('/:id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() body: UpdateAlbumDto) {
     return this.albumService.updateAlbum(id, body);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string) {
     this.albumService.deleteAlbum(id);

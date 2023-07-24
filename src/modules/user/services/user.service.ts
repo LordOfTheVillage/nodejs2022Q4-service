@@ -58,13 +58,13 @@ export class UserService {
     return this.userRepository.deleteUser(id);
   }
 
-  checkUserExists(id: string) {
+  private checkUserExists(id: string) {
     const user = this.userRepository.findUserById(id);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
-  checkId(id: string) {
+  private checkId(id: string) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
   }
 }
