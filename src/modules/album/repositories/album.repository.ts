@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
 
-interface Album {
+export interface Album {
   id: string;
   name: string;
   year: number;
@@ -16,11 +16,11 @@ const albums: Album[] = [];
 export class AlbumRepository {
   private albums: Album[] = albums;
 
-  getAllAlbums(): Album[] {
+  findAllAlbums(): Album[] {
     return this.albums;
   }
 
-  getAlbumById(id: string): Album {
+  findAlbumById(id: string): Album {
     return this.albums.find((album) => album.id === id);
   }
 
