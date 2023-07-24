@@ -26,9 +26,6 @@ export class ArtistService {
   }
 
   createArtist(artistData: CreateArtistDto) {
-    if (!artistData.name || !artistData.grammy)
-      throw new BadRequestException('Missing required fields');
-
     return this.artistRepository.createArtist(artistData);
   }
 

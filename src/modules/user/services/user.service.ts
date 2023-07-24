@@ -32,9 +32,6 @@ export class UserService {
   }
 
   createUser(userData: CreateUserDto) {
-    if (!userData.login || !userData.password)
-      throw new BadRequestException('Missing required fields');
-
     const { password, ...rest } = this.userRepository.createUser(userData);
     return rest;
   }
@@ -44,9 +41,6 @@ export class UserService {
     { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
-    console.log('PASSWORDS', oldPassword, newPassword);
-    if (!oldPassword || !newPassword)
-      throw new BadRequestException('Missing required fields');
 
     const user = this.userRepository.findUserById(id);
     if (!user) throw new NotFoundException('User not found');
