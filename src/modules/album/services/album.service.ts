@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Album, AlbumRepository } from '../repositories/album.repository';
+import { AlbumRepository } from '../repositories/album.repository';
 import { isUUID } from '@nestjs/common/utils/is-uuid';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';

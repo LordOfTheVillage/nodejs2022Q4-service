@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
+import { Injectable } from '@nestjs/common';
+import { StoreService } from '../../store/services/store.service';
 
 export interface Artist {
   id: string;
@@ -9,11 +10,13 @@ export interface Artist {
   grammy: boolean;
 }
 
-const artists: Artist[] = [];
-
-Injectable();
+@Injectable()
 export class ArtistRepository {
-  private artists: Artist[] = artists;
+  private readonly artists: Artist[] = null;
+
+  constructor(private readonly storeService: StoreService) {
+    this.artists = this.storeService.getArtists();
+  }
 
   findAllArtists(): Artist[] {
     return this.artists;
@@ -25,7 +28,7 @@ export class ArtistRepository {
 
   createArtist(artistData: CreateArtistDto): Artist {
     const newArtist: Artist = {
-      id: uuidv4(),
+      id: uuid(),
       name: artistData.name,
       grammy: artistData.grammy,
     };
@@ -43,11 +46,6 @@ export class ArtistRepository {
   }
 
   deleteArtist(id: string): boolean {
-    const index = this.artists.findIndex((artist) => artist.id === id);
-    if (index !== -1) {
-      this.artists.splice(index, 1);
-      return true;
-    }
-    return false;
+    return this.storeService.deleteArtist(id);
   }
 }

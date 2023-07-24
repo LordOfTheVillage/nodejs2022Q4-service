@@ -2,6 +2,7 @@ import { v4 as uuid } from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
+import { StoreService } from '../../store/services/store.service';
 
 export interface Album {
   id: string;
@@ -10,11 +11,13 @@ export interface Album {
   artistId: string | null;
 }
 
-const albums: Album[] = [];
-
 @Injectable()
 export class AlbumRepository {
-  private albums: Album[] = albums;
+  private readonly albums: Album[] = null;
+
+  constructor(private readonly storeService: StoreService) {
+    this.albums = this.storeService.getAlbums();
+  }
 
   findAllAlbums(): Album[] {
     return this.albums;
@@ -45,11 +48,6 @@ export class AlbumRepository {
   }
 
   deleteAlbum(id: string): boolean {
-    const index = this.albums.findIndex((album) => album.id === id);
-    if (index !== -1) {
-      this.albums.splice(index, 1);
-      return true;
-    }
-    return false;
+    return this.storeService.deleteAlbum(id);
   }
 }
