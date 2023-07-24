@@ -3,12 +3,14 @@ import { Album } from '../../album/repositories/album.repository';
 import { Artist } from '../../artist/repositories/artist.repository';
 import { User } from '../../user/repositories/user.repository';
 import { Track } from '../../track/repositories/track.repository';
+import { Favorites } from '../../favorites/repositories/favorites.repository';
 
 interface Store {
   albums: Album[];
   artists: Artist[];
   users: User[];
   tracks: Track[];
+  favorites: Favorites;
 }
 
 @Injectable()
@@ -21,6 +23,11 @@ export class StoreService {
       artists: [],
       users: [],
       tracks: [],
+      favorites: {
+        artists: [],
+        albums: [],
+        tracks: [],
+      },
     };
   }
 
@@ -40,7 +47,16 @@ export class StoreService {
     return this.store.tracks;
   }
 
+  getFavorites() {
+    return this.store.favorites;
+  }
+
   deleteAlbum(id: string) {
+    const indexFav = this.store.favorites.albums.findIndex(
+      (albumId) => albumId === id,
+    );
+    if (indexFav !== -1) this.store.albums.splice(indexFav, 1);
+
     const tracks = this.store.tracks.filter((track) => track.albumId === id);
     tracks.forEach((track) => (track.albumId = null));
 
@@ -53,6 +69,11 @@ export class StoreService {
   }
 
   deleteArtist(id: string) {
+    const indexFav = this.store.favorites.artists.findIndex(
+      (artistId) => artistId === id,
+    );
+    if (indexFav !== -1) this.store.artists.splice(indexFav, 1);
+
     const albums = this.store.albums.filter((album) => album.artistId === id);
     albums.forEach((album) => (album.artistId = null));
 
@@ -77,11 +98,37 @@ export class StoreService {
   }
 
   deleteTrack(id: string) {
+    const indexFav = this.store.favorites.tracks.findIndex(
+      (trackId) => trackId === id,
+    );
+    if (indexFav !== -1) this.store.tracks.splice(indexFav, 1);
+
     const index = this.store.tracks.findIndex((track) => track.id === id);
     if (index !== -1) {
       this.store.tracks.splice(index, 1);
       return true;
     }
     return false;
+  }
+
+  getFavoritesAlbums(): Album[] {
+    const albumsIds = this.store.favorites.albums;
+    return albumsIds.map((albumId) =>
+      this.store.albums.find((album) => album.id === albumId),
+    );
+  }
+
+  getFavoritesArtists(): Artist[] {
+    const artistsIds = this.store.favorites.artists;
+    return artistsIds.map((artistId) =>
+      this.store.artists.find((artist) => artist.id === artistId),
+    );
+  }
+
+  getFavoritesTracks(): Track[] {
+    const tracksIds = this.store.favorites.tracks;
+    return tracksIds.map((trackId) =>
+      this.store.tracks.find((track) => track.id === trackId),
+    );
   }
 }
