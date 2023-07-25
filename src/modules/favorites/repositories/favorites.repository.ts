@@ -43,6 +43,18 @@ export class FavoritesRepository {
     return this.storeService.getFavoritesTracks();
   }
 
+  findArtists() {
+    return this.storeService.getArtists();
+  }
+
+  findAlbums() {
+    return this.storeService.getAlbums();
+  }
+
+  findTracks() {
+    return this.storeService.getTracks();
+  }
+
   addTrackToFavorites(id: string) {
     this.favorites.tracks.push(id);
   }

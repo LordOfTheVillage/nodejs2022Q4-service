@@ -113,22 +113,18 @@ export class StoreService {
 
   getFavoritesAlbums(): Album[] {
     const albumsIds = this.store.favorites.albums;
-    return albumsIds.map((albumId) =>
-      this.store.albums.find((album) => album.id === albumId),
-    );
+    return this.store.albums.filter((album) => albumsIds.includes(album.id));
   }
 
   getFavoritesArtists(): Artist[] {
     const artistsIds = this.store.favorites.artists;
-    return artistsIds.map((artistId) =>
-      this.store.artists.find((artist) => artist.id === artistId),
+    return this.store.artists.filter((artist) =>
+      artistsIds.includes(artist.id),
     );
   }
 
   getFavoritesTracks(): Track[] {
     const tracksIds = this.store.favorites.tracks;
-    return tracksIds.map((trackId) =>
-      this.store.tracks.find((track) => track.id === trackId),
-    );
+    return this.store.tracks.filter((track) => tracksIds.includes(track.id));
   }
 }
