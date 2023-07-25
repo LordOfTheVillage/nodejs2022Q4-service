@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/LordOfTheVillage/nodejs2023Q2-service
 ```
 
 ## Installing NPM modules
