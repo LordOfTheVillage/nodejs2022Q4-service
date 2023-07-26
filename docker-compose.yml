@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./docker/database/Dockerfile
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lib
+    ports:
+      - "5432:5432"
+    networks:
+      - lib-network
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/application/Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://myuser:postgres@postgres/lib
+    networks:
+      - lib-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data: # Declare the volume for database files
+  postgres_logs: # Declare the volume for logs
+
+networks:
+  lib-network:
+    driver: bridge
