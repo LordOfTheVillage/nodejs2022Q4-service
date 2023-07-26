@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   postgres:
@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: ./docker/database/Dockerfile
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: lib
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     networks:
@@ -24,13 +24,15 @@ services:
       dockerfile: docker/application/Dockerfile
     ports:
       - "4000:4000"
+    environment:
+      DATABASE_URL: postgres://myuser:postgres@postgres:5432/lib
     depends_on:
       - postgres
-    environment:
-      DATABASE_URL: postgres://myuser:postgres@postgres/lib
     networks:
       - lib-network
-    restart: unless-stopped
+    restart: always
+    volumes:
+      - ./:/app
 
 volumes:
   postgres_data: # Declare the volume for database files
