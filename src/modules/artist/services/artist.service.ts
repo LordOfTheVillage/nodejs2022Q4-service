@@ -16,33 +16,31 @@ export class ArtistService {
     return this.artistRepository.findAllArtists();
   }
 
-  findArtistById(id: string) {
+  async findArtistById(id: string) {
     this.checkId(id);
-    const artist = this.checkArtistExists(id);
-
-    return artist;
+    return await this.checkArtistExists(id);
   }
 
   createArtist(artistData: CreateArtistDto) {
     return this.artistRepository.createArtist(artistData);
   }
 
-  updateArtistInfo(id: string, artistData: UpdateArtistDto) {
+  async updateArtistInfo(id: string, artistData: UpdateArtistDto) {
     this.checkId(id);
-    this.checkArtistExists(id);
+    await this.checkArtistExists(id);
 
     return this.artistRepository.updateArtistInfo(id, artistData);
   }
 
-  deleteArtist(id: string) {
+  async deleteArtist(id: string) {
     this.checkId(id);
-    this.checkArtistExists(id);
+    await this.checkArtistExists(id);
 
     return this.artistRepository.deleteArtist(id);
   }
 
-  private checkArtistExists(id: string) {
-    const artist = this.artistRepository.findArtistById(id);
+  private async checkArtistExists(id: string) {
+    const artist = await this.artistRepository.findArtistById(id);
     if (!artist) throw new NotFoundException('Artist not found');
     return artist;
   }

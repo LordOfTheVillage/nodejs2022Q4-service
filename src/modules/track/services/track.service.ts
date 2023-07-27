@@ -16,9 +16,9 @@ export class TrackService {
     return this.trackRepository.getAllTracks();
   }
 
-  getTrackById(id: string) {
+  async getTrackById(id: string) {
     this.checkId(id);
-    const track = this.checkExisting(id);
+    const track = await this.checkExisting(id);
 
     return track;
   }
@@ -27,16 +27,16 @@ export class TrackService {
     return this.trackRepository.createTrack(body);
   }
 
-  updateTrack(id: string, body: UpdateTrackDto) {
+  async updateTrack(id: string, body: UpdateTrackDto) {
     this.checkId(id);
-    this.checkExisting(id);
+    await this.checkExisting(id);
 
     return this.trackRepository.updateTrack(id, body);
   }
 
-  deleteTrack(id: string) {
+  async deleteTrack(id: string) {
     this.checkId(id);
-    this.checkExisting(id);
+    await this.checkExisting(id);
 
     return this.trackRepository.deleteTrack(id);
   }
@@ -45,8 +45,8 @@ export class TrackService {
     if (!isUUID(id)) throw new BadRequestException(`Invalid id ${id}`);
   }
 
-  private checkExisting(id: string) {
-    const track = this.trackRepository.getTrackById(id);
+  private async checkExisting(id: string) {
+    const track = await this.trackRepository.getTrackById(id);
     if (!track) throw new NotFoundException(`Track with id ${id} not found`);
     return track;
   }

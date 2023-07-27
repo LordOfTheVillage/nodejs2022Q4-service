@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/services/prisma.service';

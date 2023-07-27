@@ -16,9 +16,9 @@ export class AlbumService {
     return this.albumRepository.findAllAlbums();
   }
 
-  findAlbumById(id: string) {
+  async findAlbumById(id: string) {
     this.checkId(id);
-    const album = this.checkAlbumExisting(id);
+    const album = await this.checkAlbumExisting(id);
 
     return album;
   }
@@ -27,22 +27,22 @@ export class AlbumService {
     return this.albumRepository.createAlbum(dto);
   }
 
-  updateAlbum(id: string, dto: UpdateAlbumDto) {
+  async updateAlbum(id: string, dto: UpdateAlbumDto) {
     this.checkId(id);
-    this.checkAlbumExisting(id);
+    await this.checkAlbumExisting(id);
 
     return this.albumRepository.updateAlbumInfo(id, dto);
   }
 
-  deleteAlbum(id: string) {
+  async deleteAlbum(id: string) {
     this.checkId(id);
-    this.checkAlbumExisting(id);
+    await this.checkAlbumExisting(id);
 
     return this.albumRepository.deleteAlbum(id);
   }
 
-  private checkAlbumExisting(id: string) {
-    const album = this.albumRepository.findAlbumById(id);
+  private async checkAlbumExisting(id: string) {
+    const album = await this.albumRepository.findAlbumById(id);
     if (!album) throw new NotFoundException(`Album ${id} not found`);
     return album;
   }
