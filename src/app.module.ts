@@ -5,20 +5,13 @@ import { AlbumModule } from './modules/album/album.module';
 import { StoreModule } from './modules/store/store.module';
 import { TrackModule } from './modules/track/track.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './modules/prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config) => ({
-        type: 'postgres',
-        url: config.getOrThrow('DATABASE_URL'),
-      }),
-    }),
+    PrismaModule,
     UserModule,
     AlbumModule,
     StoreModule,

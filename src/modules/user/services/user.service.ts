@@ -13,53 +13,55 @@ import { UpdatePasswordDto } from '../dto/update-password.dto';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  findAllUsers() {
-    const users = this.userRepository.findAllUsers();
+  async findAllUsers() {
+    const users = await this.userRepository.findAllUsers();
     return users.map((user) => {
       const { password, ...rest } = user;
       return rest;
     });
   }
 
-  findUserById(id: string) {
+  async findUserById(id: string) {
     this.checkId(id);
-    const user = this.checkUserExists(id);
+    const user = await this.checkUserExists(id);
 
     const { password, ...rest } = user;
     return rest;
   }
 
-  createUser(userData: CreateUserDto) {
-    const { password, ...rest } = this.userRepository.createUser(userData);
+  async createUser(userData: CreateUserDto) {
+    const { password, ...rest } = await this.userRepository.createUser(
+      userData,
+    );
     return rest;
   }
 
-  updateUserPassword(
+  async updateUserPassword(
     id: string,
     { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
     this.checkId(id);
-    const user = this.checkUserExists(id);
+    const user = await this.checkUserExists(id);
 
     if (user.password !== oldPassword)
       throw new ForbiddenException('Old password is wrong');
 
-    const { password, ...rest } = this.userRepository.updateUserPassword(
+    const { password, ...rest } = await this.userRepository.updateUserPassword(
       id,
       newPassword,
     );
     return rest;
   }
 
-  deleteUser(id: string) {
+  async deleteUser(id: string) {
     this.checkId(id);
-    this.checkUserExists(id);
+    await this.checkUserExists(id);
 
     return this.userRepository.deleteUser(id);
   }
 
-  private checkUserExists(id: string) {
-    const user = this.userRepository.findUserById(id);
+  private async checkUserExists(id: string) {
+    const user = await this.userRepository.findUserById(id);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
