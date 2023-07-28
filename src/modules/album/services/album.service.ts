@@ -31,14 +31,14 @@ export class AlbumService {
     this.checkId(id);
     await this.checkAlbumExisting(id);
 
-    return this.albumRepository.updateAlbumInfo(id, dto);
+    return await this.albumRepository.updateAlbumInfo(id, dto);
   }
 
   async deleteAlbum(id: string) {
     this.checkId(id);
     await this.checkAlbumExisting(id);
 
-    return this.albumRepository.deleteAlbum(id);
+    return await this.albumRepository.deleteAlbum(id);
   }
 
   private async checkAlbumExisting(id: string) {

@@ -21,36 +21,36 @@ export class FavoritesController {
   @Post('artist/:id')
   @HttpCode(HttpStatus.CREATED)
   addArtistToFavorites(@Param('id') id: string) {
-    this.favoritesService.addArtistToFavorites(id);
+    return this.favoritesService.addArtistToFavorites(id);
   }
 
   @Post('album/:id')
   @HttpCode(HttpStatus.CREATED)
   addAlbumToFavorites(@Param('id') id: string) {
-    this.favoritesService.addAlbumToFavorites(id);
+    return this.favoritesService.addAlbumToFavorites(id);
   }
 
   @Post('track/:id')
   @HttpCode(HttpStatus.CREATED)
   addTrackToFavorites(@Param('id') id: string) {
-    this.favoritesService.addTrackToFavorites(id);
+    return this.favoritesService.addTrackToFavorites(id);
   }
 
   @Delete('artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteArtistFromFavorites(@Param('id') id: string) {
-    this.favoritesService.deleteArtistFromFavorites(id);
+    return this.favoritesService.deleteArtistFromFavorites(id);
   }
 
   @Delete('album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteAlbumFromFavorites(@Param('id') id: string) {
-    this.favoritesService.deleteAlbumFromFavorites(id);
+    return this.favoritesService.deleteAlbumFromFavorites(id);
   }
 
   @Delete('track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteTrackFromFavorites(@Param('id') id: string) {
-    this.favoritesService.deleteTrackFromFavorites(id);
+    return this.favoritesService.deleteTrackFromFavorites(id);
   }
 }

@@ -27,11 +27,11 @@ export class AlbumRepository {
     return await this.prisma.album.create({ data: albumData });
   }
 
-  updateAlbumInfo(id: string, albumData: UpdateAlbumDto) {
-    return this.prisma.album.update({ where: { id }, data: albumData });
+  async updateAlbumInfo(id: string, albumData: UpdateAlbumDto) {
+    return await this.prisma.album.update({ where: { id }, data: albumData });
   }
 
-  deleteAlbum(id: string) {
-    return this.prisma.album.delete({ where: { id } });
+  async deleteAlbum(id: string) {
+    return await this.prisma.album.delete({ where: { id } });
   }
 }

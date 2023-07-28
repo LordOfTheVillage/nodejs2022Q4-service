@@ -11,8 +11,8 @@ import { isUUID } from '@nestjs/common/utils/is-uuid';
 export class FavoritesService {
   constructor(private readonly favoritesRepository: FavoritesRepository) {}
 
-  findFavorites() {
-    return this.favoritesRepository.findFavorites();
+  async findFavorites() {
+    return await this.favoritesRepository.findFavorites();
   }
 
   async addArtistToFavorites(id: string) {
@@ -24,7 +24,7 @@ export class FavoritesService {
     if (!artist)
       throw new UnprocessableEntityException(`Artist with id ${id} not found`);
 
-    this.favoritesRepository.addArtistToFavorites(id);
+    return await this.favoritesRepository.addArtistToFavorites(id);
   }
 
   async addAlbumToFavorites(id: string) {
@@ -36,7 +36,7 @@ export class FavoritesService {
     if (!album)
       throw new UnprocessableEntityException(`Album with id ${id} not found`);
 
-    this.favoritesRepository.addAlbumToFavorites(id);
+    return await this.favoritesRepository.addAlbumToFavorites(id);
   }
 
   async addTrackToFavorites(id: string) {
@@ -48,7 +48,7 @@ export class FavoritesService {
     if (!track)
       throw new UnprocessableEntityException(`Track with id ${id} not found`);
 
-    this.favoritesRepository.addTrackToFavorites(id);
+    return await this.favoritesRepository.addTrackToFavorites(id);
   }
 
   async deleteArtistFromFavorites(id: string) {
@@ -59,7 +59,7 @@ export class FavoritesService {
     );
     if (!artist) throw new NotFoundException(`Artist with id ${id} not found`);
 
-    this.favoritesRepository.deleteArtistFromFavorites(id);
+    return await this.favoritesRepository.deleteArtistFromFavorites(id);
   }
 
   async deleteAlbumFromFavorites(id: string) {
@@ -70,7 +70,7 @@ export class FavoritesService {
     );
     if (!album) throw new NotFoundException(`Album with id ${id} not found`);
 
-    this.favoritesRepository.deleteAlbumFromFavorites(id);
+    return await this.favoritesRepository.deleteAlbumFromFavorites(id);
   }
 
   async deleteTrackFromFavorites(id: string) {
@@ -81,7 +81,7 @@ export class FavoritesService {
     );
     if (!track) throw new NotFoundException(`Track with id ${id} not found`);
 
-    this.favoritesRepository.deleteTrackFromFavorites(id);
+    return await this.favoritesRepository.deleteTrackFromFavorites(id);
   }
 
   private checkId(id: string) {

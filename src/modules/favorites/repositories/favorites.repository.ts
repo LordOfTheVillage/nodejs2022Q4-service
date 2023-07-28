@@ -19,16 +19,36 @@ export interface FavoritesResponse {
 @Injectable()
 export class FavoritesRepository {
   private id = '1';
-  constructor(private readonly prisma: PrismaService) {
-    this.prisma.favorites.create({
+  constructor(private readonly prisma: PrismaService) {}
+
+  private async createFavorites() {
+    await this.prisma.favorites.create({
       data: {
         id: this.id,
+        artists: {
+          connect: [],
+        },
+        albums: {
+          connect: [],
+        },
+        tracks: {
+          connect: [],
+        },
       },
     });
   }
 
-  findFavorites() {
-    return this.prisma.favorites.findUnique({
+  private async checkFavorites() {
+    const favorites = await this.prisma.favorites.findUnique({
+      where: { id: this.id },
+    });
+    if (!favorites) await this.createFavorites();
+  }
+
+  async findFavorites() {
+    await this.checkFavorites();
+
+    const favorites = await this.prisma.favorites.findUnique({
       where: { id: this.id },
       include: {
         artists: true,
@@ -36,9 +56,15 @@ export class FavoritesRepository {
         tracks: true,
       },
     });
+    return {
+      artists: favorites.artists.map(({ favoritesId, ...artist }) => artist),
+      albums: favorites.albums.map(({ favoritesId, ...album }) => album),
+      tracks: favorites.tracks.map(({ favoritesId, ...track }) => track),
+    };
   }
 
   async findFavoritesAlbums() {
+    await this.checkFavorites();
     const { albums } = await this.prisma.favorites.findUnique({
       where: { id: this.id },
       include: {
@@ -49,6 +75,7 @@ export class FavoritesRepository {
   }
 
   async findFavoritesArtists() {
+    await this.checkFavorites();
     const { artists } = await this.prisma.favorites.findUnique({
       where: { id: this.id },
       include: {
@@ -59,6 +86,7 @@ export class FavoritesRepository {
   }
 
   async findFavoritesTracks() {
+    await this.checkFavorites();
     const { tracks } = await this.prisma.favorites.findUnique({
       where: { id: this.id },
       include: {
@@ -80,8 +108,9 @@ export class FavoritesRepository {
     return this.prisma.track.findMany();
   }
 
-  addTrackToFavorites(id: string) {
-    return this.prisma.favorites.update({
+  async addTrackToFavorites(id: string) {
+    await this.checkFavorites();
+    return await this.prisma.favorites.update({
       where: { id: this.id },
       data: {
         tracks: {
@@ -93,8 +122,9 @@ export class FavoritesRepository {
     });
   }
 
-  addAlbumToFavorites(id: string) {
-    return this.prisma.favorites.update({
+  async addAlbumToFavorites(id: string) {
+    await this.checkFavorites();
+    return await this.prisma.favorites.update({
       where: { id: this.id },
       data: {
         albums: {
@@ -106,8 +136,9 @@ export class FavoritesRepository {
     });
   }
 
-  addArtistToFavorites(id: string) {
-    return this.prisma.favorites.update({
+  async addArtistToFavorites(id: string) {
+    await this.checkFavorites();
+    return await this.prisma.favorites.update({
       where: { id: this.id },
       data: {
         artists: {
@@ -119,7 +150,8 @@ export class FavoritesRepository {
     });
   }
 
-  deleteTrackFromFavorites(id: string) {
+  async deleteTrackFromFavorites(id: string) {
+    await this.checkFavorites();
     return this.prisma.favorites.update({
       where: { id: this.id },
       data: {
@@ -132,7 +164,8 @@ export class FavoritesRepository {
     });
   }
 
-  deleteAlbumFromFavorites(id: string) {
+  async deleteAlbumFromFavorites(id: string) {
+    await this.checkFavorites();
     return this.prisma.favorites.update({
       where: { id: this.id },
       data: {
@@ -145,7 +178,8 @@ export class FavoritesRepository {
     });
   }
 
-  deleteArtistFromFavorites(id: string) {
+  async deleteArtistFromFavorites(id: string) {
+    await this.checkFavorites();
     return this.prisma.favorites.update({
       where: { id: this.id },
       data: {
