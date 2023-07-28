@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: docker/application/Dockerfile
     ports:
-      - "4000:4000"
+      - "5000:5000"
     environment:
       DATABASE_URL: postgres://myuser:postgres@postgres:5432/lib
     depends_on:

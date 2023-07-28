@@ -2,7 +2,6 @@ import { v4 as uuid } from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
-import { StoreService } from '../../store/services/store.service';
 import { PrismaService } from '../../prisma/services/prisma.service';
 
 export interface Album {
@@ -24,8 +23,8 @@ export class AlbumRepository {
     return this.prisma.album.findUnique({ where: { id } });
   }
 
-  createAlbum(albumData: CreateAlbumDto) {
-    return this.prisma.album.create({ data: albumData });
+  async createAlbum(albumData: CreateAlbumDto) {
+    return await this.prisma.album.create({ data: albumData });
   }
 
   updateAlbumInfo(id: string, albumData: UpdateAlbumDto) {

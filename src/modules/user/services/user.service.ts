@@ -16,8 +16,7 @@ export class UserService {
   async findAllUsers() {
     const users = await this.userRepository.findAllUsers();
     return users.map((user) => {
-      const { password, ...rest } = user;
-      return rest;
+      return this.getUser(user);
     });
   }
 
@@ -25,15 +24,12 @@ export class UserService {
     this.checkId(id);
     const user = await this.checkUserExists(id);
 
-    const { password, ...rest } = user;
-    return rest;
+    return this.getUser(user);
   }
 
   async createUser(userData: CreateUserDto) {
-    const { password, ...rest } = await this.userRepository.createUser(
-      userData,
-    );
-    return rest;
+    const user = await this.userRepository.createUser(userData);
+    return this.getUser(user);
   }
 
   async updateUserPassword(
@@ -46,11 +42,11 @@ export class UserService {
     if (user.password !== oldPassword)
       throw new ForbiddenException('Old password is wrong');
 
-    const { password, ...rest } = await this.userRepository.updateUserPassword(
+    const updatedUser = await this.userRepository.updateUserPassword(
       id,
       newPassword,
     );
-    return rest;
+    return this.getUser(updatedUser);
   }
 
   async deleteUser(id: string) {
@@ -68,5 +64,14 @@ export class UserService {
 
   private checkId(id: string) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
+  }
+
+  private getUser(user: any) {
+    const { password, ...rest } = user;
+    return {
+      ...rest,
+      updatedAt: Number(new Date(user.updatedAt)),
+      createdAt: Number(new Date(user.createdAt)),
+    };
   }
 }

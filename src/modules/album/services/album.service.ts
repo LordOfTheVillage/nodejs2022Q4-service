@@ -23,8 +23,8 @@ export class AlbumService {
     return album;
   }
 
-  createAlbum(dto: CreateAlbumDto) {
-    return this.albumRepository.createAlbum(dto);
+  async createAlbum(dto: CreateAlbumDto) {
+    return await this.albumRepository.createAlbum(dto);
   }
 
   async updateAlbum(id: string, dto: UpdateAlbumDto) {

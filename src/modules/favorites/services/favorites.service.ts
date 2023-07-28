@@ -15,70 +15,70 @@ export class FavoritesService {
     return this.favoritesRepository.findFavorites();
   }
 
-  addArtistToFavorites(id: string) {
+  async addArtistToFavorites(id: string) {
     this.checkId(id);
 
-    const artist = this.favoritesRepository
-      .findArtists()
-      .find((artist) => artist.id === id);
+    const artist = (await this.favoritesRepository.findArtists()).find(
+      (artist) => artist.id === id,
+    );
     if (!artist)
       throw new UnprocessableEntityException(`Artist with id ${id} not found`);
 
     this.favoritesRepository.addArtistToFavorites(id);
   }
 
-  addAlbumToFavorites(id: string) {
+  async addAlbumToFavorites(id: string) {
     this.checkId(id);
 
-    const album = this.favoritesRepository
-      .findAlbums()
-      .find((album) => album.id === id);
+    const album = (await this.favoritesRepository.findAlbums()).find(
+      (album) => album.id === id,
+    );
     if (!album)
       throw new UnprocessableEntityException(`Album with id ${id} not found`);
 
     this.favoritesRepository.addAlbumToFavorites(id);
   }
 
-  addTrackToFavorites(id: string) {
+  async addTrackToFavorites(id: string) {
     this.checkId(id);
 
-    const track = this.favoritesRepository
-      .findTracks()
-      .find((track) => track.id === id);
+    const track = (await this.favoritesRepository.findTracks()).find(
+      (track) => track.id === id,
+    );
     if (!track)
       throw new UnprocessableEntityException(`Track with id ${id} not found`);
 
     this.favoritesRepository.addTrackToFavorites(id);
   }
 
-  deleteArtistFromFavorites(id: string) {
+  async deleteArtistFromFavorites(id: string) {
     this.checkId(id);
 
-    const artist = this.favoritesRepository
-      .findFavoritesArtists()
-      .find((artist) => artist.id === id);
+    const artist = (await this.favoritesRepository.findFavoritesArtists()).find(
+      (artist) => artist.id === id,
+    );
     if (!artist) throw new NotFoundException(`Artist with id ${id} not found`);
 
     this.favoritesRepository.deleteArtistFromFavorites(id);
   }
 
-  deleteAlbumFromFavorites(id: string) {
+  async deleteAlbumFromFavorites(id: string) {
     this.checkId(id);
 
-    const album = this.favoritesRepository
-      .findFavoritesAlbums()
-      .find((album) => album.id === id);
+    const album = (await this.favoritesRepository.findFavoritesAlbums()).find(
+      (album) => album.id === id,
+    );
     if (!album) throw new NotFoundException(`Album with id ${id} not found`);
 
     this.favoritesRepository.deleteAlbumFromFavorites(id);
   }
 
-  deleteTrackFromFavorites(id: string) {
+  async deleteTrackFromFavorites(id: string) {
     this.checkId(id);
 
-    const track = this.favoritesRepository
-      .findFavoritesTracks()
-      .find((track) => track.id === id);
+    const track = (await this.favoritesRepository.findFavoritesTracks()).find(
+      (track) => track.id === id,
+    );
     if (!track) throw new NotFoundException(`Track with id ${id} not found`);
 
     this.favoritesRepository.deleteTrackFromFavorites(id);

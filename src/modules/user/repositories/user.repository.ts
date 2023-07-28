@@ -30,7 +30,10 @@ export class UserRepository {
   async updateUserPassword(id: string, newPassword: string) {
     return await this.prisma.user.update({
       where: { id },
-      data: { password: newPassword, version: { increment: 1 } },
+      data: {
+        password: newPassword,
+        version: { increment: 1 },
+      },
     });
   }
 
