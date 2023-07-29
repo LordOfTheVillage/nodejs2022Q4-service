@@ -5,6 +5,7 @@ COPY ../../tsconfig.json ./
 COPY ../../tsconfig.build.json ./
 COPY ../../doc/api.yaml ./doc/
 COPY ../../prisma ./prisma/
+COPY ../../.env ./.env
 RUN npm install --legacy-peer-deps
 RUN npx prisma generate
 COPY ../../src .

@@ -1,7 +1,2 @@
 FROM postgres:latest
-
-ENV POSTGRES_USER=myuser
-ENV POSTGRES_PASSWORD=postgres
-ENV POSTGRES_DB=lib
-
 EXPOSE 5432
