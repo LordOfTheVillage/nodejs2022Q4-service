@@ -1,13 +1,11 @@
-FROM node:18
+FROM node:lts-bullseye-slim
 WORKDIR /app
 COPY package*.json ./
-COPY ../../tsconfig.json ./
-COPY ../../tsconfig.build.json ./
-COPY ../../doc/api.yaml ./doc/
+COPY ../../tsconfig*.json ./
 COPY ../../prisma ./prisma/
 COPY ../../.env ./.env
-RUN npm install --legacy-peer-deps
-RUN npx prisma generate
-COPY ../../src .
+COPY ../../src ./src/
+COPY ../../nest-cli.json ./nest-cli.json
+RUN npm install
 EXPOSE 5000
 CMD ["npm", "run", "start:dev"]

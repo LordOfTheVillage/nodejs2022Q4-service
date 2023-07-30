@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/database/Dockerfile
+    image: database
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -22,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: docker/application/Dockerfile
+    image: app
     ports:
       - "5000:5000"
     environment:
@@ -32,7 +34,7 @@ services:
       - lib-network
     restart: always
     volumes:
-      - ./:/app
+      - ./src:/app/dev
 
 volumes:
   postgres_data: # Declare the volume for database files
