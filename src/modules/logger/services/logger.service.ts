@@ -45,26 +45,26 @@ export class LoggerService implements LG {
   }
 
   private async logToFile(message: string) {
-    await this.checkLogFileSize();
+    await this.checkLogFileSize(this.filePath);
     this.logFileStream.write(`${message}\n`);
   }
 
   private async logErrorToFile(message: string) {
-    await this.checkLogFileSize();
+    await this.checkLogFileSize(this.errorFilePath);
     this.errorFileStream.write(`${message}\n`);
   }
 
-  private async checkLogFileSize() {
+  private async checkLogFileSize(filePath: string) {
     const stats = await stat(this.filePath);
     const fileSizeInKB = stats.size / 1024;
     if (fileSizeInKB >= this.logFileSizeLimitKB) {
-      this.rotateLogFile();
+      this.rotateLogFile(filePath);
     }
   }
 
-  private rotateLogFile() {
+  private rotateLogFile(filePath: string) {
     this.logFileStream.end();
-    this.logFileStream = createWriteStream(this.filePath, { flags: 'a' });
+    this.logFileStream = createWriteStream(filePath, { flags: 'a' });
   }
 
   private isLogLevelEnabled(level: number): boolean {
