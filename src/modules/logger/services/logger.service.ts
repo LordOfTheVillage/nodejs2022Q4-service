@@ -10,13 +10,15 @@ export class LoggerService {
     this.logFileStream = createWriteStream('app.log', { flags: 'a' });
   }
 
-  logRequest(req: Request, res: Response) {
+  logRequest(req: Request, res: Response, responseTime: number) {
     const { method, originalUrl, body, query } = req;
     const { statusCode } = res;
 
     const logEntry = `[Request] ${method} ${originalUrl} | Query: ${JSON.stringify(
       query,
-    )} | Body: ${JSON.stringify(body)} | Status: ${statusCode}`;
+    )} | Body: ${JSON.stringify(
+      body,
+    )} | Status: ${statusCode} | Response time: ${responseTime}ms`;
 
     this.logToFile(logEntry);
   }
