@@ -3,6 +3,14 @@ import { createWriteStream, WriteStream } from 'fs';
 import { stat } from 'fs/promises';
 import { Request, Response } from 'express';
 
+export enum LogLevels {
+  ERROR = 'Error',
+  WARN = 'Warn',
+  INFO = 'Info',
+  DEBUG = 'Debug',
+  REQUEST = 'Request',
+}
+
 @Injectable()
 export class LoggerService implements LG {
   private readonly logLevel: number;
@@ -13,15 +21,16 @@ export class LoggerService implements LG {
   constructor() {
     this.logFileStream = createWriteStream(this.filePath, { flags: 'a' });
     this.logLevel = parseInt(process.env.LOG_LEVEL, 10) || 2;
-    this.logFileSizeLimitKB =
-      Number(process.env.LOG_FILE_SIZE_LIMIT_KB) || 1024;
+    this.logFileSizeLimitKB = Number(process.env.MAX_SIZE_LOG_FILE) || 1024;
   }
 
   async logRequest(req: Request, res: Response, responseTime: number) {
     const { method, originalUrl, body, query } = req;
     const { statusCode } = res;
 
-    const logEntry = `[Request] ${method} ${originalUrl} | Query: ${JSON.stringify(
+    const logEntry = `[${
+      LogLevels.REQUEST
+    }] ${method} ${originalUrl} | Query: ${JSON.stringify(
       query,
     )} | Body: ${JSON.stringify(
       body,
@@ -54,25 +63,25 @@ export class LoggerService implements LG {
 
   async log(message: any, context?: string) {
     if (this.isLogLevelEnabled(2)) {
-      await this.logToFile(`[Info] [${context}] ${message}`);
+      await this.logToFile(`[${LogLevels.INFO}] [${context}] ${message}`);
     }
   }
 
-  async error(message: any, trace?: string, context?: string) {
+  async error(message: any, trace?: string) {
     if (this.isLogLevelEnabled(0)) {
-      await this.logToFile(`[Error] [${context}] ${message} | Stack: ${trace}`);
+      await this.logToFile(`[${LogLevels.ERROR}] ${message} | Stack: ${trace}`);
     }
   }
 
   async warn(message: any, context?: string) {
     if (this.isLogLevelEnabled(1)) {
-      await this.logToFile(`[Warn] [${context}] ${message}`);
+      await this.logToFile(`[${LogLevels.WARN}] [${context}] ${message}`);
     }
   }
 
   async debug(message: any, context?: string) {
     if (this.isLogLevelEnabled(3)) {
-      await this.logToFile(`[Debug] [${context}] ${message}`);
+      await this.logToFile(`[${LogLevels.DEBUG}] [${context}] ${message}`);
     }
   }
 }
