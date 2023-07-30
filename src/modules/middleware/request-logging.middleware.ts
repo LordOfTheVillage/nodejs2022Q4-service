@@ -9,10 +9,10 @@ export class RequestLoggingMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: () => void) {
     const startTime = Date.now();
 
-    res.on('finish', () => {
+    res.on('finish', async () => {
       const responseTime = Date.now() - startTime;
 
-      this.logger.logRequest(req, res, responseTime);
+      await this.logger.logRequest(req, res, responseTime);
     });
 
     next();

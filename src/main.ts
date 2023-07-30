@@ -7,14 +7,15 @@ import { LoggerService } from './modules/logger/services/logger.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: false });
   const logger = app.get(LoggerService);
+  app.useLogger(logger);
 
   process.on('uncaughtException', (error) => {
-    logger.logError(error);
+    logger.error(error);
     process.exit(1);
   });
 
   process.on('unhandledRejection', (reason, promise) => {
-    logger.logError(reason as Error);
+    logger.error(reason as Error);
     process.exit(1);
   });
 
