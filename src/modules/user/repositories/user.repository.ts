@@ -23,6 +23,10 @@ export class UserRepository {
     return await this.prisma.user.findUnique({ where: { id } });
   }
 
+  async findUserByLogin(login: string) {
+    return await this.prisma.user.findFirst({ where: { login } });
+  }
+
   async createUser(userData: CreateUserDto) {
     return await this.prisma.user.create({ data: userData });
   }

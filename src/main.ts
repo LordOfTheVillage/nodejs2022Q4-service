@@ -6,7 +6,7 @@ import { LoggerService } from './modules/logger/services/logger.service';
 import { ExceptionFilter } from './modules/filters/exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  const app = await NestFactory.create(AppModule); //{ logger: false }
   const logger = app.get(LoggerService);
   app.useLogger(logger);
   app.useGlobalFilters(new ExceptionFilter(logger));

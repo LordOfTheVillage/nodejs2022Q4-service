@@ -13,13 +13,13 @@ export class TokenService {
     const [accessToken, refreshToken] = await Promise.all([
       this.generateToken(
         encryptedData,
-        process.env.ACCESS_SECRET,
-        process.env.ACCESS_EXPIRES_IN,
+        process.env.JWT_SECRET_KEY,
+        process.env.TOKEN_EXPIRE_TIME,
       ),
       this.generateToken(
         encryptedData,
-        process.env.REFRESH_SECRET,
-        process.env.REFRESH_EXPIRES_IN,
+        process.env.JWT_SECRET_REFRESH_KEY,
+        process.env.TOKEN_REFRESH_EXPIRE_TIME,
       ),
     ]);
 
@@ -27,14 +27,6 @@ export class TokenService {
       accessToken,
       refreshToken,
     };
-  }
-
-  getVerificationToken(encryptedData: EncryptedData) {
-    return this.generateToken(
-      encryptedData,
-      process.env.VERIFICATION_SECRET,
-      process.env.VERIFICATION_EXPIRES_IN,
-    );
   }
 
   generateToken(

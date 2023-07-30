@@ -14,15 +14,15 @@ export class RefreshTokenStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req) => {
-          return req?.cookies?.['refreshToken'];
+          return req?.body?.['refreshToken'];
         },
       ]),
-      secretOrKey: process.env.REFRESH_SECRET,
+      secretOrKey: process.env.JWT_SECRET_REFRESH_KEY,
       passReqToCallback: true,
     });
   }
 
   validate(req: Request, payload: JwtPayload) {
-    return { ...payload, token: req.cookies['refreshToken'] };
+    return { ...payload, token: req.body['refreshToken'] };
   }
 }
