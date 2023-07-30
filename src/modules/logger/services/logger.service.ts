@@ -16,10 +16,15 @@ export class LoggerService implements LG {
   private readonly logLevel: number;
   private readonly logFileSizeLimitKB: number;
   private readonly filePath: string = 'app.log';
+  private readonly errorFilePath: string = 'error.log';
   private logFileStream: WriteStream;
+  private errorFileStream: WriteStream;
 
   constructor() {
     this.logFileStream = createWriteStream(this.filePath, { flags: 'a' });
+    this.errorFileStream = createWriteStream(this.errorFilePath, {
+      flags: 'a',
+    });
     this.logLevel = parseInt(process.env.LOG_LEVEL, 10) || 2;
     this.logFileSizeLimitKB = Number(process.env.MAX_SIZE_LOG_FILE) || 1024;
   }
@@ -42,6 +47,11 @@ export class LoggerService implements LG {
   private async logToFile(message: string) {
     await this.checkLogFileSize();
     this.logFileStream.write(`${message}\n`);
+  }
+
+  private async logErrorToFile(message: string) {
+    await this.checkLogFileSize();
+    this.errorFileStream.write(`${message}\n`);
   }
 
   private async checkLogFileSize() {
@@ -69,7 +79,9 @@ export class LoggerService implements LG {
 
   async error(message: any, trace?: string) {
     if (this.isLogLevelEnabled(0)) {
-      await this.logToFile(`[${LogLevels.ERROR}] ${message} | Stack: ${trace}`);
+      await this.logErrorToFile(
+        `[${LogLevels.ERROR}] ${message} | Stack: ${trace}`,
+      );
     }
   }
 
