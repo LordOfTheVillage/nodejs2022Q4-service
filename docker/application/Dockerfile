@@ -7,5 +7,5 @@ COPY ../../.env ./.env
 COPY ../../src ./src/
 COPY ../../nest-cli.json ./nest-cli.json
 RUN npm install
-EXPOSE 5000
+EXPOSE 4000
 CMD ["npm", "run", "start:dev"]
