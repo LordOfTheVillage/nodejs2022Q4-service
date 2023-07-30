@@ -34,7 +34,7 @@ services:
       - lib-network
     restart: always
     volumes:
-      - ./src:/app/dev
+      - ./:/app
 
 volumes:
   postgres_data: # Declare the volume for database files
