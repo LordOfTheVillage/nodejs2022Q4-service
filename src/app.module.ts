@@ -6,6 +6,7 @@ import { StoreModule } from './modules/store/store.module';
 import { TrackModule } from './modules/track/track.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { LoggerModule } from './modules/logger/logger.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PrismaModule } from './modules/prisma/prisma.module';
     ArtistModule,
     TrackModule,
     FavoritesModule,
+    LoggerModule,
   ],
   controllers: [],
   providers: [],
