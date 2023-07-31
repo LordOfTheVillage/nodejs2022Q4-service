@@ -22,10 +22,14 @@ export class AuthService {
       ...authDto,
       password: hash,
     });
-    return await this.tokenService.getTokens({
+    return {
+      ...(await this.tokenService.getTokens({
+        id: newUser.id,
+        login: newUser.login,
+      })),
       id: newUser.id,
       login: newUser.login,
-    });
+    };
   }
 
   async login(data: AuthDto) {
