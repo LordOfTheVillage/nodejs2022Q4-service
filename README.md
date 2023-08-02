@@ -14,7 +14,7 @@ git clone https://github.com/LordOfTheVillage/nodejs2023Q2-service
 ## Installing NPM modules
 
 ```
-npm install
+npm install --legacy-peer-deps
 ```
 
 ## Running application
@@ -42,18 +42,6 @@ To run only one of all test suites
 
 ```
 npm run test -- <path to suite>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
 ```
 
 ### Auto-fix and format
