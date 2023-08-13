@@ -20,6 +20,10 @@ git clone https://github.com/LordOfTheVillage/nodejs2023Q2-service
 ```
 npm install
 ```
+or if not working
+```
+npm install --legacy-peer-deps
+```
 
 ## Running application
 
