@@ -41,6 +41,6 @@ export class AlbumController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string) {
-    this.albumService.deleteAlbum(id);
+    return this.albumService.deleteAlbum(id);
   }
 }

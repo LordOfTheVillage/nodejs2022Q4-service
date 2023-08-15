@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
 import { Injectable } from '@nestjs/common';
-import { StoreService } from '../../store/services/store.service';
+import { PrismaService } from '../../prisma/services/prisma.service';
 
 export interface Artist {
   id: string;
@@ -12,40 +12,25 @@ export interface Artist {
 
 @Injectable()
 export class ArtistRepository {
-  private readonly artists: Artist[] = null;
+  constructor(private readonly prisma: PrismaService) {}
 
-  constructor(private readonly storeService: StoreService) {
-    this.artists = this.storeService.getArtists();
+  findAllArtists() {
+    return this.prisma.artist.findMany();
   }
 
-  findAllArtists(): Artist[] {
-    return this.artists;
+  findArtistById(id: string) {
+    return this.prisma.artist.findUnique({ where: { id } });
   }
 
-  findArtistById(id: string): Artist {
-    return this.artists.find((artist) => artist.id === id);
+  createArtist(artistData: CreateArtistDto) {
+    return this.prisma.artist.create({ data: artistData });
   }
 
-  createArtist(artistData: CreateArtistDto): Artist {
-    const newArtist: Artist = {
-      id: uuid(),
-      name: artistData.name,
-      grammy: artistData.grammy,
-    };
-    this.artists.push(newArtist);
-    return newArtist;
+  updateArtistInfo(id: string, artistData: UpdateArtistDto) {
+    return this.prisma.artist.update({ where: { id }, data: artistData });
   }
 
-  updateArtistInfo(id: string, artistData: UpdateArtistDto): Artist {
-    const artist = this.artists.find((artist) => artist.id === id);
-    if (artist) {
-      artist.name = artistData.name;
-      artist.grammy = artistData.grammy;
-    }
-    return artist;
-  }
-
-  deleteArtist(id: string): boolean {
-    return this.storeService.deleteArtist(id);
+  deleteArtist(id: string) {
+    return this.prisma.artist.delete({ where: { id } });
   }
 }

@@ -13,58 +13,65 @@ import { UpdatePasswordDto } from '../dto/update-password.dto';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  findAllUsers() {
-    const users = this.userRepository.findAllUsers();
+  async findAllUsers() {
+    const users = await this.userRepository.findAllUsers();
     return users.map((user) => {
-      const { password, ...rest } = user;
-      return rest;
+      return this.getUser(user);
     });
   }
 
-  findUserById(id: string) {
+  async findUserById(id: string) {
     this.checkId(id);
-    const user = this.checkUserExists(id);
+    const user = await this.checkUserExists(id);
 
-    const { password, ...rest } = user;
-    return rest;
+    return this.getUser(user);
   }
 
-  createUser(userData: CreateUserDto) {
-    const { password, ...rest } = this.userRepository.createUser(userData);
-    return rest;
+  async createUser(userData: CreateUserDto) {
+    const user = await this.userRepository.createUser(userData);
+    return this.getUser(user);
   }
 
-  updateUserPassword(
+  async updateUserPassword(
     id: string,
     { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
     this.checkId(id);
-    const user = this.checkUserExists(id);
+    const user = await this.checkUserExists(id);
 
     if (user.password !== oldPassword)
       throw new ForbiddenException('Old password is wrong');
 
-    const { password, ...rest } = this.userRepository.updateUserPassword(
+    const updatedUser = await this.userRepository.updateUserPassword(
       id,
       newPassword,
     );
-    return rest;
+    return this.getUser(updatedUser);
   }
 
-  deleteUser(id: string) {
+  async deleteUser(id: string) {
     this.checkId(id);
-    this.checkUserExists(id);
+    await this.checkUserExists(id);
 
     return this.userRepository.deleteUser(id);
   }
 
-  private checkUserExists(id: string) {
-    const user = this.userRepository.findUserById(id);
+  private async checkUserExists(id: string) {
+    const user = await this.userRepository.findUserById(id);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
   private checkId(id: string) {
     if (!isUUID(id)) throw new BadRequestException(`Invalid user id ${id}`);
+  }
+
+  private getUser(user: any) {
+    const { password, ...rest } = user;
+    return {
+      ...rest,
+      updatedAt: Number(new Date(user.updatedAt)),
+      createdAt: Number(new Date(user.createdAt)),
+    };
   }
 }

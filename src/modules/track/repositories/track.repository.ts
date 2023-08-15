@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
 import { CreateTrackDto } from '../dto/create-track.dto';
 import { UpdateTrackDto } from '../dto/update-track.dto';
-import { StoreService } from '../../store/services/store.service';
+import { PrismaService } from '../../prisma/services/prisma.service';
 
 export interface Track {
   id: string;
@@ -14,43 +13,24 @@ export interface Track {
 
 @Injectable()
 export class TrackRepository {
-  private readonly tracks: Track[] = null;
-
-  constructor(private readonly storeService: StoreService) {
-    this.tracks = this.storeService.getTracks();
-  }
-  getAllTracks(): Track[] {
-    return this.tracks;
+  constructor(private readonly prisma: PrismaService) {}
+  getAllTracks() {
+    return this.prisma.track.findMany();
   }
 
-  getTrackById(id: string): Track {
-    return this.tracks.find((track) => track.id === id);
+  getTrackById(id: string) {
+    return this.prisma.track.findUnique({ where: { id } });
   }
 
-  createTrack(trackData: CreateTrackDto): Track {
-    const newTrack: Track = {
-      id: uuid(),
-      name: trackData.name,
-      artistId: trackData.artistId,
-      albumId: trackData.albumId,
-      duration: trackData.duration,
-    };
-    this.tracks.push(newTrack);
-    return newTrack;
+  createTrack(trackData: CreateTrackDto) {
+    return this.prisma.track.create({ data: trackData });
   }
 
-  updateTrack(id: string, trackData: UpdateTrackDto): Track {
-    const track = this.tracks.find((track) => track.id === id);
-    if (track) {
-      track.name = trackData.name;
-      track.artistId = trackData.artistId;
-      track.albumId = trackData.albumId;
-      track.duration = trackData.duration;
-    }
-    return track;
+  updateTrack(id: string, trackData: UpdateTrackDto) {
+    return this.prisma.track.update({ where: { id }, data: trackData });
   }
 
-  deleteTrack(id: string): boolean {
-    return this.storeService.deleteTrack(id);
+  deleteTrack(id: string) {
+    return this.prisma.track.delete({ where: { id } });
   }
 }
