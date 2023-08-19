@@ -27,6 +27,13 @@ export class UserService {
     return this.getUser(user);
   }
 
+  async findUserByLogin(login: string) {
+    const user = await this.userRepository.findUserByLogin(login);
+    if (!user) throw new NotFoundException('User not found');
+
+    return user;
+  }
+
   async createUser(userData: CreateUserDto) {
     const user = await this.userRepository.createUser(userData);
     return this.getUser(user);
